@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spyware detection and analysis: methodologies, limitations and future directions | internet Research Lab</title>
+
+  <meta name="description" content="internet Research Lab">
+
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="../../../../css/main.css">
+  <link href="../../../../css/fonts.css" rel='stylesheet' type='text/css'>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="../../../../img/favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+  <div class="site">
+    <header class="header">
+      <a href="../../../../index.html">
+        <h1 class="title">&nbsp;</h1>
+      </a>
+    </header>
+
+    <section class="about">
+      <a href="../../../../index.html"><img src="../../../../img/logo.png" height="100" alt="internet Research Lab logo" /><br></a>
+
+    </section>
+
+    <!--
+      <div class="topnav">
+          <a href="index.html">about</a> &#183;
+          <a href="research.html">research</a> &#183;
+          <a href="opinion.html">opinion</a> &#183;
+          <a href="media.html">media</a> &#183;
+          <a href="misc.html">misc</a>
+      </div>
+	  -->
+    <br>
+    <hr>
+
+    <section>
+      <h2>Spyware detection and analysis: methodologies, limitations and future directions</h2>
+	  
+	  <p><i>19 March 2025</i></p>
+	  
+	  <h3>Background</h3>
+
+	  <p>The internet Research Lab is helping combat advanced cybersecurity threats targeting civil society across the world. This entails analysing past instances of malware and spyware infections, and studying the constantly evolving tools, tactics and procedures deployed by malicious actors in order to detect and respond to future threats effectively.</p>
+	  
+	  <p>In this post, we review the current state of malware and spyware analysis and detection methods employed by industry, academia and civil society. We cover how these techniques have been used in the past to yield evidence of spyware deployed against civil society actors. Focusing on spyware detection for mobile phones, we discuss these techniques' strengths and weaknesses.</p>
+	  
+	  <p>We also introduce our ongoing work on improving spyware detection that relies on novel 'inducement' techniques, which involve instigating active spyware infections to generate network traffic that can be captured and analysed.</p>
+	  
+	  <h3>Spyware Detection</h3>
+	  
+	  <p>Spyware detection refers to the act of looking for indications of spyware infections on a device. These could take the form of suspicious applications, files, text messages, processes, crash logs, internet activity, or other artifacts left by malware on the infected device or its surrounding network. Based on how indicators are found, spyware detection methods can be broadly classified into the following categories:</p>
+	  
+	  <p></p>
+	  
+	  <ol>
+	  <li value="1"><i>Host-based detection</i>: Host-based detection refers to detection that relies on monitoring software running on the target device (host). This can range from well-known antivirus software to more advanced endpoint detection solutions that are commonly deployed in enterprise settings. In these methods, all activity occurring on the host is constantly monitored for signs of compromise. This includes scanning message attachments, applications, files, running processes and other system-level activities. These methods can be deterministic, where scanned items are matched with previously known <a href="https://papers.put.as/papers/malware/2014/masterthesiskatja.pdf"> signatures of malicious activity</a>, or statistical, where <a href="https://ieeexplore.ieee.org/abstract/document/8949524" rel="noreferrer"> machine learning models</a> are deployed to classify potentially anomalous activity. <br><br> Host-based detection methods have limited applicability in the mobile phone context due to the restrictive access provided to user-installed applications by common mobile operating systems such as Android and iOS, which impedes the ability of antivirus solutions to examine and monitor system-level activities. While host-based detection methods can detect commonly occurring threats, they are not very useful for detecting more advanced threats, as any sufficiently sophisticated malware can gain complete control of the device and disable active host-based detection measures.<br><br></li>
+	  
+	  <li value="2"><i>Device forensics</i>: This class of methods is employed in post-attack scenarios to find evidence of spyware and combines data from multiple sources including file systems, logs, and memory traces for analysis. The mechanism used by spyware to enter the victim device may cause errors in running processes, leave stray files, or create artifacts in the message or browsing history. These artifacts are often documented in system logs and databases. Amnesty International's <a href="https://www.amnesty.org/en/latest/research/2021/07/forensic-methodology-report-how-to-catch-nso-groups-pegasus/" rel="noreferrer"> Mobile Verification Toolkit</a>  analyzed iOS logs and noticed errors from iMessage that eventually led to the detection of Pegasus infections. Similarly, Citizen Lab <a href="https://citizenlab.ca/2013/03/you-only-click-twice-finfishers-global-proliferation-2/" rel="noreferrer">found</a> that FinFisher disguised itself on disk as an image file or Word document. While such “cold” forensic analysis cannot detect ongoing attacks, logs and memory can be monitored in real-time to prevent spyware from being installed. Live forensics tools like <a href="https://github.com/google/grr" rel="noreferrer">GRR</a> allow simultaneous analyses of a large number of devices. Device forensics are known to yield high-confidence evidence of successful attacks as they match specific indicators found in previous infections. While some basic device forensics can be performed by individuals with technical competency,  performing forensic analyses to identify and confirm advance threats requires specialized knowledge of the mobile operating system and (often) physical access to the target device, which can limit this technique's applicability.<br><br></li>
+	  
+	  <li value="3"><i>Network traffic analysis</i>: A common characteristic of malware, and of all spyware, is its ability to communicate with its operator to receive instructions and exfiltrate information from the infected device. Network traffic analysis methods attempt to observe and detect traces of the malware while it communicates with its operator. Such methods are commonly deployed in enterprise settings as Intrusion Detection and Prevention Systems (IDS, IPS) that identify and block malicious network activity. Network traffic analysis methods most often utilize metadata (e.g., IP addresses, DNS queries) present in internet traffic to identify malicious traffic signatures. However, recent work has yielded some probabilistic methods of detection that use machine learning classifiers to identify malicious traffic. <br><br> Network traffic analysis methods have <a href="https://citizenlab.ca/2020/12/the-great-ipwn-journalists-hacked-with-suspected-nso-group-imessage-zero-click-exploit/" rel="noreferrer">shown</a> <a href="https://securelist.com/operation-triangulation-catching-wild-triangle/110916/" rel="noreferrer">promise</a>  in the initial detection of the presence of spyware, which is then confirmed using device forensic methods. These methods can operate remotely, require little effort to install and are agnostic to mobile operating systems. The <a href="https://pts-project.org/" rel="noreferrer">PiRougue</a> Tool Suite is a set of open-source tools to conduct network traffic analysis and digital forensics. <br><br> Network traffic analysis is limited in that it can only detect active infections or recent infections during which network activity was preserved for analysis. Malware developers have also gotten adept at masking their network activity to mirror benign traffic, making it harder to detect.</li>
+	  
+	  </ol>
+	  
+	  <p>Different techniques yield evidence of presence of malware with varying levels of confidence. Statistical machine learning methods offer powerful identification capability, but their lower-confidence results need to be confirmed using deterministic methods like signature matching. In practice, a combination of these methods may be applied.</p>
+	  
+	  <h3>Spyware Analysis</h3>
+	  
+	  <p>Spyware  analysis and detection are complementary activities. Spyware analysis borrows most techniques from the more general field of malware analysis, which involves understanding how malware is deployed and how it operates, and can inform future work on detection and defense. Information collected during the malware analysis process, such as file hashes and contacted domains, is referred to as threat intelligence and is often shared between defenders to bolster security. Security analysts often undertake the following activities to conduct malware analysis: </p>
+	  
+	  <p></p>
+	  
+	  <ol>
+	  
+	  <li value="1"><i> Attack vector analysis</i>: This entails examining the point of infection to deduce how malware was delivered and how it bypassed security measures to gain control over the target device. Phishing and other social engineering attacks are common entry points that entice users into clicking on a link or downloading a file that allows attackers to execute code on the device. 0-click attacks achieve this without any interaction from the user. Upon entering the device, attackers exploit security vulnerabilities in low-level operating system code to bypass protection measures and take control of the device to deliver malware. <br><br></li>
+	  
+	  <li value="2"><i> Implant analysis</i>: The malware implant is the core malware functionality that is installed on the device post-exploitation. Capturing the malware implant and analyzing it can give significant insight into how it behaves. There are <a href="https://ia600504.us.archive.org/25/items/humble_bundle_books/practicalmalwareanalysis.pdf" rel="noreferrer">two types</a>: (1) Static analysis inspects the malware and its artefacts without executing it. This includes reverse engineering the malware, and examining its code and use of system APIs. (2) Dynamic analysis examines the properties of malware while it is being executed. This includes recording and analyzing network activity, interactions with other systems, and probing the network infrastructure it relies on.<br><br></li>
+	  
+	  <li value="3"><i> Infrastructure analysis</i>: Malicious middleboxes within the network can install spyware on unsuspecting user devices through network injection. In 2023, a Citizen Lab <a href="https://citizenlab.ca/2023/09/predator-in-the-wires-ahmed-eltantawy-targeted-with-predator-spyware-after-announcing-presidential-ambitions/" rel="noreferrer">investigation</a> revealed that unsecured HTTP redirects were used to install Cytrox’s Predator spyware on devices belonging to an Egyptian Member of Parliament. The attack was mounted by a middlebox connected to the edge of Vodafone Egypt’s network. Real-time analysis of network infrastructure can detect ongoing attacks as well as discover <a href="https://citizenlab.ca/2021/07/hooking-candiru-another-mercenary-spyware-vendor-comes-into-focus/" rel="noreferrer"> command-and-control servers</a> coordinating installed spyware. Automated network probing is a common technique used to identify devices on the network and monitor suspicious behaviour.</li>
+	  
+	  </ol>
+	  
+	  <h3>Inducement-based network analysis for spyware detection</h3>
+	  
+	  <p dir="ltr"> To remain inconspicuous on the target device and evade detection, many modern spyware now employ <a href="https://jonaolapo.github.io/papers/essos16malware.pdf" rel="noreferrer">trigger-based tactics</a>, i.e. they only execute malicious functions when certain conditions are met.  Pertinently, certain conditions trigger the spyware to exfiltrate information from the target device to the host server. Some of these 'phone home' triggers can be simple; many spyware specimens send information over the network to the host server at regular intervals or after a certain volume of information is recorded on the device. These triggers can also include actions from the device user, such as shooting a photograph or video, answering a phone call, or typing text into a password field. Triggers can also be environment-dependent; for example, spyware can be programmed to send information to its host server when the device connects to WiFi, so that a user does not spot increased network activity over a mobile data connection.  </p>
+	  
+	  <p dir="ltr"> In a <a href="https://www.sciencedirect.com/science/article/abs/pii/S016740482400107X" rel="noreferrer">recent stream of research</a>, scholars have relied on the knowledge of the design of the spyware and these triggers to design a more sophisticated spyware detection technique: inducement-based network traffic analysis. Inducement here refers to deliberately attempting to satisfy a trigger criterion in order to instigate the spyware to send information to the host server. Concomitant network traffic analysis can then capture the evidence of this 'induced' activity. </p>
+	  
+	  <p dir="ltr"> With traditional network traffic analysis, it is difficult to accurately identify malicious flows as they are designed to blend in with large amounts of expected or benign traffic. Inducement-based network traffic analysis can narrow the analysis time-frame to improve efficacy of malicious flow detection. However, this comes at a small performance cost as the inducement must be performed on the target device. </p>
+	  
+	  <p dir="ltr"> Over the next few months, the internet Research Lab will develop and test a mobile application that implements inducement-based network analysis, with the aim of improving spyware detection capabilities for civil society. </p>
+	  
+	  <p dir="ltr"><i> This blogpost was written by Divyank Katira, Anunay Kulshrestha and Gurshabad Grover. The authors would like to thank Daniel Bedoya Arroyo for his invaluable suggestions. Mistakes or opinions remain the authors'.</i></p>
+	  
+	</section>
+
+
+    <footer class="footer">
+      <div class="contact">
+        <p>Contact us at mail@irl.works</p>
+
+        <span class="find-me-on-heading">Find us on: </span> 
+        <ul class="find-me-on">
+          <li>
+            <a href="https://github.com/Internet-Research-Lab">Github</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
