@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spyware detection and analysis: methodologies, limitations and future directions | internet Research Lab</title>
+
+  <meta name="description" content="internet Research Lab">
+
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="../../../../css/main.css">
+  <link href="../../../../css/fonts.css" rel='stylesheet' type='text/css'>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="../../../../img/favicon.ico" type="image/x-icon" />
+
+</head>
+
+<body>
+  <div class="site">
+    <header class="header">
+      <a href="../../../../index.html">
+        <h1 class="title">&nbsp;</h1>
+      </a>
+    </header>
+
+    <section class="about">
+      <a href="../../../../index.html"><img src="../../../../img/logo.png" height="100" alt="internet Research Lab logo" /><br></a>
+
+    </section>
+
+    <!--
+      <div class="topnav">
+          <a href="index.html">about</a> &#183;
+          <a href="research.html">research</a> &#183;
+          <a href="opinion.html">opinion</a> &#183;
+          <a href="media.html">media</a> &#183;
+          <a href="misc.html">misc</a>
+      </div>
+	  -->
+    <br>
+    <hr>
+
+    <section>
+    <h2>How internet applications geolocate users and why it needs a rethink</h2>
+	  
+	  <p><i>22 July 2025</i></p>
+
+    <p><b>Internet applications have come to rely on IP addresses to estimate where their users are located. This blogpost explains ongoing standards work to improve IP address privacy, their approach to IP geolocation, and questions whether it is the role of internet routing protocols to reveal information about a user’s location.</b></p>
+      
+    <p>We have all encountered localized content on the internet – be it search engines that show results near you or a website that displays content in your local language. Many web and mobile applications rely on a mechanism known as "IP-based geolocation", wherein the IP address connecting to a server is used to estimate where a visitor might be located. IP location estimates are sourced from commercial <a href="https://www.apnic.net/ip-geolocation-service-providers/">services</a> that rely on a number of open and proprietary <a href="https://en.wikipedia.org/wiki/Internet_geolocation">signals</a> to profile IP addresses and deduce their locations, with increased accuracy being a selling point for these services. Location estimates are considered to be accurate at the country level, but accuracy may <a href="https://www.maxmind.com/en/geoip-accuracy-comparison">drop</a> at the city and zip code granularity.</p>
+
+    <p>IP-based geolocation has served as a quick-and-easy way for applications to show their users locally relevant content and to demarcate <a href="https://scholars.law.unlv.edu/facpub/947/">virtual borders</a> that are used to comply with local regulations. While this approach may be convenient for companies and users alike, it neglects to consider the privacy implications of deriving private information about internet users from network layer metadata without their knowledge or consent. Even though IP-based geolocation has become the norm, there is an important need to deliberate on whether this is a desirable property of a network protocol, or simply one that has emerged from popular use, and whether it meets the privacy expectations of end-users.</p>
+
+    <p>IP geolocation is also being increasingly used to enact geo-blocking – a form of internet censorship where content is withheld from internet users based on their geographical location. When governments find it infeasible to block access to an entire online platform, they instead issue takedown orders to the platforms to block individual pieces of content. These platforms <a href="https://takedown.observer">utilize</a> IP-based geo-blocking to restrict access to content in the country. In India, for example, IP-based geo-blocking has become a predominant way for the government to conduct internet censorship. <a href="https://www.medianama.com/2023/02/223-dont-interfere-says-indian-govt-urls-blocked-2022/">Reports</a> indicate that out of the 6,775 pieces of content (including web pages, websites, apps, social media posts and accounts) blocked by the IT Ministry in 2022, about 50% were X posts and accounts and 25% were on Facebook.</p>
+    
+    <h3>Emerging recognition of the need to keep IP addresses private</h3>
+    
+    <p>Originally designed to identify routes to entities that can be reached through the internet, IP addresses have been (ab)used in a <a href="https://datatracker.ietf.org/doc/html/draft-irtf-pearg-ip-address-privacy-considerations-01#name-ip-address-use-cases">number of ways</a> to glean information about end-users. This includes profiling internet users for behavioral advertising and abuse prevention, identifying individuals for law enforcement purposes, building IP reputation systems for spam and DDoS prevention, and geolocating users for localization and to comply with local laws.</p>
+    
+    <p>Recognizing the privacy risks of IP addresses in profiling and identifying internet users, <a href="https://datatracker.ietf.org/doc/html/draft-irtf-pearg-ip-address-privacy-considerations-01#name-ip-privacy-protection-and-l">some</a> jurisdictions have designated them as personally identifiable information for data protection purposes. A number of technical solutions, such as VPNs, proxies, mixnets and Tor, have emerged to obfuscate users’ IP addresses from the web services they visit, with each offering varying degrees of privacy-usability tradeoffs.</p>
+    
+    <p>Participants at the IETF have also <a href="https://datatracker.ietf.org/doc/draft-irtf-pearg-ip-address-privacy-considerations/">acknowledged</a> the need to keep IP addresses private and are developing and deploying protocols to help internet users protect their IP address from the web servers they interact with. This work is primarily being done through the <a href="https://datatracker.ietf.org/wg/ohai/about/">OHAI</a> and <a href="https://datatracker.ietf.org/wg/ohai/about/">MASQUE</a> working groups, where participants are working on developing &quot;privacy relays&quot;.</p>
+
+    <h3 id="oblivious-routing-ongoing-standards-work-to-improve-ip-address-privacy">Oblivious routing: ongoing standards work to improve IP address privacy</h3>
+
+    <p>The go-to solution for obfuscating a user&#39;s IP address from a web service they are trying to visit is to route the request through an intermediary server, so that the recipient sees the intermediary&#39;s IP address and not the user&#39;s. This is how VPNs and proxies operate. This design, however, shifts the privacy issue to a different entity, as the intermediary now has visibility into the user’s internet usage. To work around this, IETF participants are developing an &quot;oblivious routing&quot; pattern. In this <a href="https://blog.cloudflare.com/icloud-private-relay/#how-browsing-works-using-icloud-private-relay">approach</a>, the request is routed through two intermediary servers operated by separate entities, neither of which is given a complete picture of the request. As long as the two intermediaries do not collude, they cannot see which web servers a user is communicating with, which allows internet use without revealing a user’s IP address.</p>
+
+    <p>The OHAI working group has developed the <a href="https://datatracker.ietf.org/doc/rfc9458/">Oblivious HTTP</a> standard which defines a way for specific applications that involve repeatedly querying information from a server to do so privately using oblivious routing. The MASQUE working group has <a href="https://datatracker.ietf.org/wg/masque/documents/">developed</a> more generic transport-level relay protocols that are suited for a wider range of use-cases, like web browsing. A MASQUE proxy can be used with or without oblivious routing, depending on the privacy properties required from the system.</p>
+
+    <p>While there (currently) is no singular definition of what privacy relays are, these are some examples of how they&#39;ve been deployed: (1) Apple&#39;s <a href="https://www.apple.com/icloud/docs/iCloud_Private_Relay_Overview_Dec2021.pdf">iCloud Private Relay</a> is a subscription service that uses MASQUE proxies with oblivious routing to allow users to browse the internet while keeping their IP address private, (2) Apple&#39;s <a href="https://security.apple.com/blog/private-cloud-compute/">Private Cloud Compute</a> is experimenting with Oblivious HTTP to reduce the footprint of their user&#39;s queries to AI models, (3) Google&#39;s <a href="https://github.com/GoogleChrome/ip-protection">proposed</a> IP Protection envisions MASQUE-based oblivious routing for a very limited set cases (third-party requests in incognito mode) in its Chrome browser, (4) Cloudflare&#39;s <a href="https://blog.cloudflare.com/masque-now-powers-1-1-1-1-and-warp-apps-dex-available-with-remote-captures/">Warp</a> offers both free and paid versions of a VPN-like service that uses a MASQUE proxy for internet browsing, but without oblivious routing, and (5) Google’s <a href="https://developers.google.com/safe-browsing/reference">Safe Browsing</a> service uses Oblivious HTTP to enable users to privately query for unsafe URLs. </p>
+
+    <h3 id="an-opportune-moment-to-rethink-ip-based-geolocation">An opportune moment to rethink IP-based geolocation</h3>
+
+    <p>If privacy relays get adopted more widely, internet applications will no longer be able to rely on metadata derived from a user&#39;s IP address for the variety of purposes that they are used for today. Internet companies are working to establish alternate signals to provide this information to web servers in situations where they deem the metadata to be useful. For example, anonymous credential schemes, like those used in the <a href="https://blog.cloudflare.com/privacy-pass-standard/">Privacy Pass</a> standard, are being used to distinguish human traffic from bots without using signals like IP addresses or CAPTCHAs.</p>
+
+    <p>When it comes to geolocating users through privacy relays, operators are looking to maintain the status quo by conveying geolocation information to web servers through alternate means. Both Apple&#39;s iCloud Private Relay and Chrome&#39;s proposed IP Protection, convey users&#39; IP geolocation through their relays by maintaining a pool of IPs in each region, and routing requests through a relay whose IP location corresponds to the user’s IP location. While Apple&#39;s service offers users the choice to reduce the IP location granularity to a country-level, it does not allow users to opt-in or opt-out of geolocation sharing entirely. Recognising that it is expensive to maintain a pool of IP addresses in every potential user location, these companies have also <a href="https://datatracker.ietf.org/doc/draft-pauly-httpbis-geoip-hint/">proposed</a> a new HTTP header to allow clients/browsers to directly convey geolocation information through any privacy relays that may be present.</p>
+
+    <p>Given the pervasive reliance on IP-based geolocation by much of the web, it is easy to see why these companies have taken a cautious approach in retaining support for it. But simultaneously, as we move away from IP metadata signals and design appropriate alternatives for them, it is important to deliberate upon whether geolocating users is truly a function of a network routing protocol or one that happened to emerge from its design, and how geolocation mechanisms can incorporate user privacy and agency.</p>
+
+    <p>Internet applications have incorrectly come to rely on network layer metadata to derive private information about internet users without their knowledge or consent. This metadata is also being misused to conduct internet censorship on a large scale. While it is not an easy task for companies to re-evaluate their assumptions on the free availability of geolocation data, it is in the best interest of end-users to start planning a migration to <a href="https://www.w3.org/TR/geolocation/">consensual</a> forms of location sharing on the internet, and the arrival of IP privacy solutions at the IETF is an opportune moment to do so.</p>
+
+    <p>Standardization work on privacy relays, oblivious routing and IP geolocation is ongoing in the HTTPBIS, MASQUE and OHAI working groups at the IETF. These discussions could benefit from participation of the public interest technology community to advocate for migration to consensual forms of location sharing on the web.</p>
+
+    <p><i>This blogpost was written by Divyank Katira. It also appeared on the <a href="https://pitg.network/news/2025/07/20/geolocation.html">PITG Blog</a> on 20 July 2025. The author would like to thank Michaela Shapiro and Shivan Kaul Sahib for their invaluable suggestions. Mistakes and opinions remain the author’s.</i></p>
+
+	  <p><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer"><img style="height:22px!important;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""><img style="height:22px!important;margin-left:3px" src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""></a></p> 
+	  
+	</section>
+
+    <footer class="footer">
+      <div class="contact">
+        <p>Contact us at mail@irl.works</p>
+
+        <span class="find-me-on-heading">Find us on: </span> 
+        <ul class="find-me-on">
+          <li>
+            <a href="https://github.com/Internet-Research-Lab">Github</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
